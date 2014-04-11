@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>jQuery Sample: Validation</title>
+        <link rel="shortcut icon" href="https://jquery.org/favicon.ico">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <style type="text/css">
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+                background: white;
+                border: 1px solid lightgray;
+            }
+            .css-form input.ng-invalid.ng-dirty {
+                background-color: #FA787E;
+            }
+            .css-form input.ng-valid.ng-dirty {
+                background-color: #78FA89;
+            }
+            .error {
+                color: red;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="jumbotron">
+                        <img src="http://3q9r3w5fmk02nwdgj2ehfy278g.wpengine.netdna-cdn.com/wp-content/uploads/2013/04/jQuery-Logo.png" alt="jQuery Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Book</h2>
+                </div>
+                <div class="panel-body">     
+                    <div class="row">
+                        <form id="bookForm" name="bookForm" class="css-form" novalidate>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="isbn" class="control-label">ISBN</label>
+                                    <input id="isbn" name="isbn" type="text" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="title" class="control-label">Title</label>
+                                    <input id="title" name="title" type="text" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="author" class="control-label">Author</label>
+                                    <input id="author" name="author" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="publisher" class="control-label">Publisher</label>
+                                    <input id="publisher" name="publisher" type="text" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="published" class="control-label">Published</label>
+                                    <input id="published" name="published" type="text" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="pages" class="control-label">Pages</label>
+                                    <input id="pages" name="pages" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-6 text-right">
+                            <button id="validate" class="btn btn-default">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Validate
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-left">
+                            <button id="reset" class="btn btn-default">
+                                <span class="glyphicon glyphicon-repeat"></span>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var validator, min, max;
+            min = 9; // arbitrary
+            max = 9999; // arbitrary
+
+            $(document).ready(function () {
+                loadBook();
+                validator = $("#bookForm").validate({
+                    rules: {
+                        isbn: {
+                            required: true,
+                            minlength: min,
+                            maxlength: max
+                        },
+                        title: {
+                            required: true,
+                            minlength: min,
+                            maxlength: max
+                        },
+                        author: {
+                            required: true,
+                            minlength: min,
+                            maxlength: max
+                        },
+                        publisher: {
+                            required: true,
+                            minlength: min,
+                            maxlength: max
+                        },
+                        published: {
+                            required: true,
+                            date: true
+                        },
+                        pages: {
+                            required: true,
+                            number: true,
+                            min: min,
+                            max: max
+                        }
+                    }
+                });
+            });
+
+            $('#validate').on('click', function () {
+                if (!$("#bookForm").valid()) {
+                    return false;
+                }
+            })
+
+            $('#reset').on('click', function () {
+                validator.resetForm();
+                loadBook();
+            })
+
+            function loadBook() {
+                var book;
+                $.getJSON('http://nanotaboada.hp.af.cm/books/builder/1', function (data) {
+                    book = data;
+                });
+                if (book) {
+                    $('#isbn').val(book.isbn);
+                    $('#title').val(book.title);
+                    $('#author').val(book.author);
+                    $('#publisher').val(book.publisher);
+                    $('#published').val(book.published);
+                    $('#pages').val(book.pages);
+                } else {
+                    $('#isbn').val('Isbn');
+                    $('#title').val('Title');
+                    $('#author').val('Author');
+                    $('#publisher').val('Publisher');
+                    $('#published').val(moment().format('DD/MM/YYYY'));
+                    $('#pages').val(1);
+                }
+            }
+        </script>
+    </body>
+</html>
