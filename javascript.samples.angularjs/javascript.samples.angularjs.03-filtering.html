@@ -1,0 +1,96 @@
+<!doctype html>
+<html data-ng-app="bookshelfApp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>AngularJS Sample: Filtering</title>
+        <link rel="shortcut icon" href="http://www.angularjs.org/favicon.ico">        
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single-Page Application */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+            #search-bar {
+                margin-bottom: 9px;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.15/angular.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script>
+            var app = angular.module('bookshelfApp', []);
+
+            app.controller('bookshelfController', function ($scope, $http) {
+                var uri = 'http://nanotaboada.hp.af.cm/books';
+                $http.get(uri, {cache: true}).success(function (catalog) {
+                    $scope.catalog = catalog;
+                    $scope.orderColumn = 'published';
+                    $scope.orderAscending = true;
+                    $scope.notify = function(orderColumn, orderAscending) {
+                        toastr.info('Ordered by ' + '<strong>' + orderColumn + '</strong>' + (orderAscending ? ' (Z&rarr;A)' : ' (A&rarr;Z)'));
+                    };
+                });
+            });
+
+            toastr.options = { 
+                "positionClass": "toast-top-full-width",
+                "showDuration": "333",
+                "showDuration": "333",
+                "timeOut": "999"
+            };
+        </script>
+    </head>
+    <body>
+        <div class="container" data-ng-controller="bookshelfController">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="jumbotron text-center">
+                        <img src="http://angularjs.org/img/AngularJS-large.png" alt="AngujarJS Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group" id="search-bar">
+                        <input data-ng-model="search.title" type="text" class="form-control" placeholder="Title" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover text-left">
+                        <thead>
+                            <tr>
+                                <th><a href="" data-ng-click="orderColumn = 'isbn'; orderAscending = !orderAscending; notify(orderColumn, orderAscending)">ISBN</a></th>
+                                <th><a href="" data-ng-click="orderColumn = 'title'; orderAscending = !orderAscending; notify(orderColumn, orderAscending)">Title</a></th>
+                                <th><a href="" data-ng-click="orderColumn = 'author'; orderAscending = !orderAscending; notify(orderColumn, orderAscending)">Author</a></th>
+                                <th><a href="" data-ng-click="orderColumn = 'published'; orderAscending = !orderAscending; notify(orderColumn, orderAscending)">Published</a></th>
+                                <th><a href="" data-ng-click="orderColumn = 'publisher'; orderAscending = !orderAscending; notify(orderColumn, orderAscending)">Publisher</a></th>
+                                <th><a href="" data-ng-click="orderColumn = 'pages'; orderAscending = !orderAscending; notify(orderColumn, orderAscending)">Pages</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="book in catalog.books | filter:search | orderBy:orderColumn:orderAscending">
+                                <td>{{ book.isbn }}</td>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.published | date:'mediumDate' }}</td>
+                                <td>{{ book.publisher }}</td>
+                                <td>{{ book.pages | number }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

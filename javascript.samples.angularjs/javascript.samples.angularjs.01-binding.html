@@ -1,0 +1,65 @@
+<!doctype html>
+<html data-ng-app="bookshelfApp">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>AngularJS Sample: Binding</title>
+        <link rel="shortcut icon" href="http://www.angularjs.org/favicon.ico">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <style>
+        /* Arbitrary styles accommodating the display to fit a Single-Page App format */
+        .jumbotron {
+            padding-top: 18px;
+            padding-bottom: 18px;
+        }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.15/angular.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script>
+            var app = angular.module('bookshelfApp', []);
+
+            app.controller('bookshelfController', function ($scope, $http) {
+                var uri = 'http://nanotaboada.hp.af.cm/books';
+                $http.get(uri).success(function (catalog) {
+                    $scope.columns = [ 'ISBN', 'Title', 'Author', 'Published', 'Publisher', 'Pages' ];
+                    $scope.catalog = catalog;
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container" data-ng-controller="bookshelfController">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <div class="jumbotron">
+                        <img src="http://angularjs.org/img/AngularJS-large.png" alt="AngularJS Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <table class="table table-hover text-left">
+                        <thead>
+                            <tr>
+                                <th data-ng-repeat="column in columns">{{ column }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="book in catalog.books">
+                                <td>{{ book.isbn }}</td>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.published | date:'mediumDate' }}</td>
+                                <td>{{ book.publisher }}</td>
+                                <td>{{ book.pages | number }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
