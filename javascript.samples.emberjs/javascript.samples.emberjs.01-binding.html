@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>EmberJS Sample: Binding</title>
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <link rel="shortcut icon" href="http://emberjs.com/images/favicon.png" />
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.5.0/ember.debug.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember-data.js/1.0.0-beta.7/ember-data.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script>
+            /* Application
+            ----------------------------------------------------------------- */
+            window.Bookshelf = Ember.Application.create();
+            Bookshelf.ApplicationAdapter = DS.FixtureAdapter.extend();
+
+            /* Routes
+            ----------------------------------------------------------------- */
+            Bookshelf.Router.map(function() {
+                this.resource('books', { path: '/' }); // data-template-name
+            });
+
+            Bookshelf.BooksRoute = Ember.Route.extend({
+                model: function () {
+                    return this.store.find('book');
+                }
+            });
+
+            /* View
+            ----------------------------------------------------------------- */
+
+            Ember.Handlebars.registerBoundHelper('formatDate', function(date) {
+              return moment(date).format('L');
+            });
+
+            /* Model
+            ----------------------------------------------------------------- */
+            Bookshelf.Book = DS.Model.extend({
+                isbn : DS.attr('string'),
+                title : DS.attr('string'),
+                author : DS.attr('string'),
+                published : DS.attr('date'),
+                publisher : DS.attr('string'),
+                pages : DS.attr('number'),
+                description : DS.attr('string'),
+                instock : DS.attr('boolean', {defaultValue: true})
+            });
+
+            // INFO: id attributes are required.
+            Bookshelf.Book.FIXTURES = [
+                {
+                    "id" : 1,
+                    "isbn" : "9781593272821",
+                    "title" : "Eloquent JavaScript",
+                    "author" : "Marijn Haverbeke",
+                    "published" : "2011-02-03T00:00:00.000Z",
+                    "publisher" : "No Starch Press",
+                    "pages" : 224,
+                    "description" : "\"A concise and balanced mix of principles and pragmatics. I loved the tutorial-style game-like program development. This book rekindled my earliest joys of programming. Plus, JavaScript!\" â€”Brendan Eich, creator of JavaScript",
+                    "instock" : true
+                },
+                {
+                    "id" : 2,
+                    "isbn" : "9780596805524",
+                    "title" : "JavaScript: The Definitive Guide, 6th Edition",
+                    "author" : "David Flanagan",
+                    "published" : "2011-05-10T00:00:00.000Z",
+                    "publisher" : "O'Reilly Media",
+                    "pages" : 1100,
+                    "description" : "Since 1996, JavaScript: The Definitive Guide has been the bible for JavaScript programmers. With more than 500,000 copies in print, web developers are still raving about it.",
+                    "instock" : true
+                },
+                {
+                    "id" : 3,
+                    "isbn" : "9781430247494",
+                    "title" : "Pro JavaScript Performance: Monitoring and Visualization",
+                    "author" : "Tom Barker",
+                    "published" : "2012-10-31T00:00:00.000Z",
+                    "publisher" : "Apress",
+                    "pages" : 220,
+                    "description" : "Performance is a hugely important area of web development. If your site runs slowly, users are going to leave, and the problem only grows as your site gets more popular. Pro JavaScript Performance gives you the tools you need to keep your sites smooth and responsive no matter how many users you have.",
+                    "instock" : true
+                },
+                {
+                    "id" : 4,
+                    "isbn" : "9780596806750",
+                    "title" : "JavaScript Patterns",
+                    "author" : "Stoyan Stefanov",
+                    "published" : "2010-09-28T00:00:00.000Z",
+                    "publisher" : "O'Reilly Media",
+                    "pages" : 236,
+                    "description" : "What's the best approach for developing an application with JavaScript? This book helps you answer that question with numerous JavaScript coding patterns and best practices. If you're an experienced developer looking to solve problems related to objects, functions, inheritance, and other language-specific categories, the abstractions and code templates in this guide are ideal -- whether you're writing a client-side, server-side, or desktop application with JavaScript.",
+                    "instock" : true
+                },
+                {
+                    "id" : 5,
+                    "isbn" : "9780321822086",
+                    "title" : "jQuery, jQuery UI, and jQuery Mobile: Recipes and Examples",
+                    "author" : "Adriaan de Jonge",
+                    "published" : "2012-11-12T00:00:00.000Z",
+                    "publisher" : "Addison-Wesley Professional",
+                    "pages" : 400,
+                    "description" : "100+ Practical jQuery Recipes for Solving Your Real-World Web and Mobile Development Challenges!",
+                    "instock" : true
+                },
+                {
+                    "id" : 6,
+                    "isbn" : "9780672336058",
+                    "title" : "Windows 8 Apps with HTML5 and JavaScript Unleashed",
+                    "author" : "Stephen Walther",
+                    "published" : "2012-11-30T00:00:00.000Z",
+                    "publisher" : "Sams Publishing",
+                    "pages" : 368,
+                    "description" : "Already comfortable with JavaScript and HTML? Microsoft has just empowered you to build breakthrough apps for Windows 8. Itâ€™s a remarkable opportunity--and best-selling Microsoft web development author Stephen Walther will show you how to take full advantage of it.",
+                    "instock" : true
+                }
+            ];
+
+        </script>
+    </head>
+    <body>
+        <script type="text/x-handlebars" data-template-name="books">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <div class="jumbotron">
+                        <img src="http://www.gravatar.com/avatar/0cf15665a9146ba852bf042b0652780a?s=112" alt="EmberJS Logo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <table class="table table-hover text-left">
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Published</th>
+                                    <th>Publisher</th>
+                                    <th>Pages</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each}}
+                                <tr>
+                                    <td>{{isbn}}</td>
+                                    <td>{{title}}</td>
+                                    <td>{{author}}</td>
+                                    <td>{{formatDate published}}</td>
+                                    <td>{{publisher}}</td>
+                                    <td>{{pages}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </script>
+    </body>
+</html>
