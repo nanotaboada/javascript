@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>KnockoutJS Sample: Binding</title>
+        <link rel="shortcut icon" href="http://knockoutjs.com/img/favicon.ico">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+                background-color: #cf5300;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <div class="jumbotron">
+                        <img src="http://knockoutjs.com/img/ko-logo.png" alt="KnockoutJS Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <table class="table table-hover text-left">
+                        <thead>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Published</th>
+                                <th>Publisher</th>
+                                <th>Pages</th>
+                            </tr>
+                        </thead>
+                        <!-- http://knockoutjs.com/documentation/foreach-binding.html -->
+                        <tbody data-bind="foreach: books">
+                            <tr>
+                                <td data-bind="text: isbn"></td>
+                                <td data-bind="text: title"></td>
+                                <td data-bind="text: author"></td>
+                                <td data-bind="text: moment(published).format('L')"></td>
+                                <td data-bind="text: publisher"></td>
+                                <td data-bind="text: pages"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+        <script>
+            function BooksViewModel () {
+                self = this;
+                // http://knockoutjs.com/documentation/observableArrays.html
+                this.books = ko.observableArray();
+            };
+
+            var viewModel = new BooksViewModel();
+            ko.applyBindings(viewModel);
+
+            $(document).ready(function () {
+                var url = 'http://nanotaboada.hp.af.cm/books';
+                $.getJSON(url, null, function (data, status, xhr) {
+                    $.each(data.books, function (index, value) {
+                        viewModel.books.push(value);
+                    });
+                });
+            });
+        </script>        
+    </body>
+</html>

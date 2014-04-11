@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>KnockoutJS Sample: Master/Detail</title>
+        <link rel="shortcut icon" href="http://knockoutjs.com/img/favicon.ico">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+                background-color: #cf5300;
+            }
+            th {
+                cursor: pointer;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>        
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <div class="jumbotron">
+                        <img src="http://knockoutjs.com/img/ko-logo.png" alt="KnockoutJS Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group" id="search-bar">
+                        <input data-bind="value: query, valueUpdate: 'keyup', event: { onchange: selectedRow('')}" autocomplete="off" type="text" class="form-control" placeholder="Title" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-md-9 text-center">
+                    <table class="table table-hover text-left">
+                        <thead>
+                            <tr data-bind="foreach: headers">
+                                <th>
+                                    <a href="#" data-bind="click: $parent.sort, text: headerName"></a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <!-- http://knockoutjs.com/documentation/foreach-binding.html -->
+                        <tbody data-bind="foreach: books">
+                            <tr data-bind="click: $parent.select">
+                                <td data-bind="text: isbn"></td>
+                                <td data-bind="text: title"></td>
+                                <td data-bind="text: author"></td>
+                                <td data-bind="text: moment(published).format('L')"></td>
+                                <td data-bind="text: publisher"></td>
+                                <td data-bind="text: pages"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-3">
+                    <table class="table text-left">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-bind="text: selectedRow().description"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>          
+        </div>
+        <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+        <script>
+            function BooksViewModel () {
+                self = this;
+                self.query = ko.observable('');                
+                self.bookshelf = [];
+                self.books = ko.observableArray();
+                self.selectedRow = ko.observable('');
+                self.select = function (row) {
+                    self.selectedRow(row);
+                };
+                self.search = function (value) {
+                    self.books.removeAll();                    
+                    if (value != "") {
+                        var results = ko.utils.arrayFilter(self.bookshelf, function (book) {
+                            return book.title.toLowerCase().indexOf(value) >= 0;
+                        });
+                        $.each(results, function (index, value) {
+                            self.books.push(value);
+                        });
+                    } else {
+                        $.each(self.bookshelf, function (index, value) {
+                            self.books.push(value);
+                        });
+                    };
+
+                    var foo = ko.utils.arrayFilter(self.books(), function (book) {
+                        return book.title.toLowerCase().indexOf(value) >= 0;
+                    });
+                };
+                self.headers = [
+                    { headerName:'ISBN',sortPropertyName:'isbn', asc: true },
+                    { headerName:'Title',sortPropertyName:'title', asc: true },
+                    { headerName:'Author',sortPropertyName:'author', asc: true },
+                    { headerName:'Published',sortPropertyName:'published', asc: true },
+                    { headerName:'Publisher',sortPropertyName:'publisher', asc: true },
+                    { headerName:'Pages',sortPropertyName:'pages', asc: true }
+                ];
+                self.activeHeader = self.headers[1]; // default sort
+                self.sort = function (header, event) {
+                    if (self.activeHeader === header) {
+                        header.asc = !header.asc;
+                    } else {
+                        self.activeHeader = header;
+                    }
+                    var n = self.activeHeader.sortPropertyName;
+                    var ascSort = function (a, z) {
+                        return a[n] < z[n] ? -1 : a[n] > z[n] ? 1 : a[n] == z[n] ? 0 : 0;
+                    };
+                    var descSort = function (z, a) {
+                        return z[n] > a[n] ? -1 : z[n] < a[n] ? 1 : z[n] == a[n] ? 0 : 0;
+                    };
+                    var sortOrder = self.activeHeader.asc ? ascSort : descSort;
+                    self.books.sort(sortOrder);
+                    toastr.info('Ordered by ' + '<strong>' + self.activeHeader.headerName + '</strong>' + (self.activeHeader.asc ? ' (Z&rarr;A)' : ' (A&rarr;Z)'));
+                };
+            };
+
+            var viewModel = new BooksViewModel();
+            viewModel.query.subscribe(viewModel.search);
+            ko.applyBindings(viewModel);
+
+            $(document).ready(function () {
+                var url = 'http://nanotaboada.hp.af.cm/books';
+                $.getJSON(url, null, function(data, status, xhr) {
+                    $.each(data.books, function(index, value) {
+                        viewModel.bookshelf.push(value);
+                        viewModel.books.push(value);
+                    });
+                });
+            });
+
+            toastr.options = { 
+                "positionClass": "toast-top-full-width",
+                "showDuration": "333",
+                "showDuration": "333",
+                "timeOut": "999"
+            };            
+        </script>     
+    </body>
+</html>
