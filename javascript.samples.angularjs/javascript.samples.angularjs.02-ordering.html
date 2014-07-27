@@ -22,20 +22,18 @@
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script>
             var app = angular.module('bookshelfApp', []);
-
             app.controller('bookshelfController', function ($scope, $http) {
-                var uri = 'http://nanotaboada.hp.af.cm/books';
+                var uri = 'http://cloud.nanotaboada.com.ar/books';
                 $http.get(uri, {cache: true}).success(function (catalog) {
                     $scope.catalog = catalog;
                     $scope.orderColumn = 'published';
                     $scope.orderAscending = true;
                     $scope.notify = function(orderColumn, orderAscending) {
-                        toastr.info('Ordered by ' + '<strong>' + orderColumn + '</strong>' + (orderAscending ? ' (Z&rarr;A)' : ' (A&rarr;Z)'));
+                      toastr.info('Ordered by ' + '<strong>' + orderColumn + '</strong>' + (orderAscending ? ' (Z&rarr;A)' : ' (A&rarr;Z)'));
                     };
                 });
             });
-
-            toastr.options = { 
+            toastr.options = {
                 "positionClass": "toast-top-full-width",
                 "showDuration": "333",
                 "showDuration": "333",

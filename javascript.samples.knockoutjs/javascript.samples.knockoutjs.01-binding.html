@@ -63,18 +63,16 @@
                 // http://knockoutjs.com/documentation/observableArrays.html
                 this.books = ko.observableArray();
             };
-
             var viewModel = new BooksViewModel();
             ko.applyBindings(viewModel);
-
             $(document).ready(function () {
-                var url = 'http://nanotaboada.hp.af.cm/books';
+                var url = 'http://cloud.nanotaboada.com.ar/books';
                 $.getJSON(url, null, function (data, status, xhr) {
                     $.each(data.books, function (index, value) {
                         viewModel.books.push(value);
                     });
                 });
             });
-        </script>        
+        </script>
     </body>
 </html>

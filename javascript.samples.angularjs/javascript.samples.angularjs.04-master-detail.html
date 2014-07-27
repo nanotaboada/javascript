@@ -5,7 +5,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <title>AngularJS Sample: Master/Detail</title>
-        <link rel="shortcut icon" href="http://www.angularjs.org/favicon.ico">        
+        <link rel="shortcut icon" href="http://www.angularjs.org/favicon.ico">
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
         <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
@@ -25,9 +25,8 @@
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script>
             var app = angular.module('bookshelfApp', []);
-
             app.controller('bookshelfController', function ($scope, $http) {
-                var uri = 'http://nanotaboada.hp.af.cm/books';
+                var uri = 'http://cloud.nanotaboada.com.ar/books';
                 $http.get(uri, { cache: true }).success(function (catalog) {
                     $scope.catalog = catalog;
                     $scope.orderColumn = 'published';
@@ -43,8 +42,7 @@
                     }
                 });
             });
-
-            toastr.options = { 
+            toastr.options = {
                 "positionClass": "toast-top-full-width",
                 "showDuration": "333",
                 "showDuration": "333",

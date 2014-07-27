@@ -21,7 +21,7 @@
         </style>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>        
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     </head>
     <body>
@@ -42,7 +42,7 @@
                         </span>
                     </div>
                 </div>
-            </div>            
+            </div>
             <div class="row">
                 <div class="col-md-12 text-center">
                     <table class="table table-hover text-left">
@@ -72,11 +72,11 @@
         <script>
             function BooksViewModel () {
                 self = this;
-                self.query = ko.observable('');                
+                self.query = ko.observable('');
                 self.bookshelf = [];
                 self.books = ko.observableArray();
                 self.search = function (value) {
-                    self.books.removeAll();                    
+                    self.books.removeAll();
                     if (value != "") {
                         var results = ko.utils.arrayFilter(self.bookshelf, function (book) {
                             return book.title.toLowerCase().indexOf(value) >= 0;
@@ -121,13 +121,11 @@
                     toastr.info('Ordered by ' + '<strong>' + self.activeHeader.headerName + '</strong>' + (self.activeHeader.asc ? ' (Z&rarr;A)' : ' (A&rarr;Z)'));
                 };
             };
-
             var viewModel = new BooksViewModel();
             viewModel.query.subscribe(viewModel.search);
             ko.applyBindings(viewModel);
-
             $(document).ready(function () {
-                var url = 'http://nanotaboada.hp.af.cm/books';
+                var url = 'http://cloud.nanotaboada.com.ar/books';
                 $.getJSON(url, null, function(data, status, xhr) {
                     $.each(data.books, function(index, value) {
                         viewModel.bookshelf.push(value);
@@ -135,8 +133,7 @@
                     });
                 });
             });
-
-            toastr.options = { 
+            toastr.options = {
                 "positionClass": "toast-top-full-width",
                 "showDuration": "333",
                 "showDuration": "333",

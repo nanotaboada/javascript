@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width">
         <title>KnockoutJS Sample: Ordering</title>
         <link rel="shortcut icon" href="http://knockoutjs.com/img/favicon.ico">
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />        
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
         <style>
             /* Arbitrary styles accommodating the display to fit a Single Page App format */
@@ -21,7 +21,7 @@
         </style>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>        
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     </head>
     <body>
@@ -91,25 +91,22 @@
                     toastr.info('Ordered by ' + '<strong>' + self.activeHeader.headerName + '</strong>' + (self.activeHeader.asc ? ' (Z&rarr;A)' : ' (A&rarr;Z)'));
                 };
             };
-
             var viewModel = new BooksViewModel();
             ko.applyBindings(viewModel);
-
             $(document).ready(function () {
-                var url = 'http://nanotaboada.hp.af.cm/books';
+                var url = 'http://cloud.nanotaboada.com.ar/books';
                 $.getJSON(url, null, function (data, status, xhr) {
                     $.each(data.books, function (index, value) {
                         viewModel.books.push(value);
                     });
                 });
             });
-
-            toastr.options = { 
+            toastr.options = {
                 "positionClass": "toast-top-full-width",
                 "showDuration": "333",
                 "showDuration": "333",
                 "timeOut": "999"
             };
-        </script>        
+        </script>
     </body>
 </html>

@@ -43,7 +43,7 @@
                 <div class="panel-heading">
                     <h2 class="panel-title">Book</h2>
                 </div>
-                <div class="panel-body">     
+                <div class="panel-body">
                     <div class="row">
                         <form id="bookForm" name="bookForm" class="css-form" novalidate>
                             <div class="col-md-6">
@@ -99,7 +99,6 @@
             var validator, min, max;
             min = 9; // arbitrary
             max = 9999; // arbitrary
-
             $(document).ready(function () {
                 loadBook();
                 validator = $("#bookForm").validate({
@@ -137,21 +136,18 @@
                     }
                 });
             });
-
             $('#validate').on('click', function () {
                 if (!$("#bookForm").valid()) {
                     return false;
                 }
-            })
-
+            });
             $('#reset').on('click', function () {
                 validator.resetForm();
                 loadBook();
-            })
-
+            });
             function loadBook() {
                 var book;
-                $.getJSON('http://nanotaboada.hp.af.cm/books/builder/1', function (data) {
+                $.getJSON('http://cloud.nanotaboada.com.ar/books/builder/1', function (data) {
                     book = data;
                 });
                 if (book) {
@@ -169,7 +165,7 @@
                     $('#published').val(moment().format('DD/MM/YYYY'));
                     $('#pages').val(1);
                 }
-            }
+            };
         </script>
     </body>
 </html>
