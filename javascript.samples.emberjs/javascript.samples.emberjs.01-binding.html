@@ -24,7 +24,9 @@
             /* Application
             ----------------------------------------------------------------- */
             window.Bookshelf = Ember.Application.create();
-            Bookshelf.ApplicationAdapter = DS.FixtureAdapter.extend();
+            Bookshelf.ApplicationAdapter = DS.RESTAdapter.extend({
+                host: 'http://cloud.nanotaboada.com.ar'
+            });
 
             /* Routes
             ----------------------------------------------------------------- */
@@ -40,7 +42,6 @@
 
             /* View
             ----------------------------------------------------------------- */
-
             Ember.Handlebars.registerBoundHelper('formatDate', function(date) {
               return moment(date).format('L');
             });
@@ -57,77 +58,6 @@
                 description : DS.attr('string'),
                 instock : DS.attr('boolean', {defaultValue: true})
             });
-
-            // INFO: id attributes are required.
-            Bookshelf.Book.FIXTURES = [
-                {
-                    "id" : 1,
-                    "isbn" : "9781593272821",
-                    "title" : "Eloquent JavaScript",
-                    "author" : "Marijn Haverbeke",
-                    "published" : "2011-02-03T00:00:00.000Z",
-                    "publisher" : "No Starch Press",
-                    "pages" : 224,
-                    "description" : "\"A concise and balanced mix of principles and pragmatics. I loved the tutorial-style game-like program development. This book rekindled my earliest joys of programming. Plus, JavaScript!\" â€”Brendan Eich, creator of JavaScript",
-                    "instock" : true
-                },
-                {
-                    "id" : 2,
-                    "isbn" : "9780596805524",
-                    "title" : "JavaScript: The Definitive Guide, 6th Edition",
-                    "author" : "David Flanagan",
-                    "published" : "2011-05-10T00:00:00.000Z",
-                    "publisher" : "O'Reilly Media",
-                    "pages" : 1100,
-                    "description" : "Since 1996, JavaScript: The Definitive Guide has been the bible for JavaScript programmers. With more than 500,000 copies in print, web developers are still raving about it.",
-                    "instock" : true
-                },
-                {
-                    "id" : 3,
-                    "isbn" : "9781430247494",
-                    "title" : "Pro JavaScript Performance: Monitoring and Visualization",
-                    "author" : "Tom Barker",
-                    "published" : "2012-10-31T00:00:00.000Z",
-                    "publisher" : "Apress",
-                    "pages" : 220,
-                    "description" : "Performance is a hugely important area of web development. If your site runs slowly, users are going to leave, and the problem only grows as your site gets more popular. Pro JavaScript Performance gives you the tools you need to keep your sites smooth and responsive no matter how many users you have.",
-                    "instock" : true
-                },
-                {
-                    "id" : 4,
-                    "isbn" : "9780596806750",
-                    "title" : "JavaScript Patterns",
-                    "author" : "Stoyan Stefanov",
-                    "published" : "2010-09-28T00:00:00.000Z",
-                    "publisher" : "O'Reilly Media",
-                    "pages" : 236,
-                    "description" : "What's the best approach for developing an application with JavaScript? This book helps you answer that question with numerous JavaScript coding patterns and best practices. If you're an experienced developer looking to solve problems related to objects, functions, inheritance, and other language-specific categories, the abstractions and code templates in this guide are ideal -- whether you're writing a client-side, server-side, or desktop application with JavaScript.",
-                    "instock" : true
-                },
-                {
-                    "id" : 5,
-                    "isbn" : "9780321822086",
-                    "title" : "jQuery, jQuery UI, and jQuery Mobile: Recipes and Examples",
-                    "author" : "Adriaan de Jonge",
-                    "published" : "2012-11-12T00:00:00.000Z",
-                    "publisher" : "Addison-Wesley Professional",
-                    "pages" : 400,
-                    "description" : "100+ Practical jQuery Recipes for Solving Your Real-World Web and Mobile Development Challenges!",
-                    "instock" : true
-                },
-                {
-                    "id" : 6,
-                    "isbn" : "9780672336058",
-                    "title" : "Windows 8 Apps with HTML5 and JavaScript Unleashed",
-                    "author" : "Stephen Walther",
-                    "published" : "2012-11-30T00:00:00.000Z",
-                    "publisher" : "Sams Publishing",
-                    "pages" : 368,
-                    "description" : "Already comfortable with JavaScript and HTML? Microsoft has just empowered you to build breakthrough apps for Windows 8. Itâ€™s a remarkable opportunity--and best-selling Microsoft web development author Stephen Walther will show you how to take full advantage of it.",
-                    "instock" : true
-                }
-            ];
-
         </script>
     </head>
     <body>
