@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>BackboneJS Sample: Binding</title>
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <link rel="shortcut icon" href="http://backbonejs.org/favicon.ico" />
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+            #logo {
+                width: 450px;
+                height: auto; /* Ensures aspect ratio */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <div class="jumbotron">
+                        <img id="logo" src="http://backbonejs.org/docs/images/backbone.png" alt="BackboneJS Logo" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table id="books" class="table table-hover text-left">
+                        <thead>
+                            <tr>
+                                <th>ISBN</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Published</th>
+                                <th>Publisher</th>
+                                <th>Pages</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Template ================================== -->
+                            <script type="text/template" id="book">
+                                <td><%= isbn %></td>
+                                <td><%= title %></td>
+                                <td><%= author %></td>
+                                <td><%= moment(published).format('L') %></td>
+                                <td><%= publisher %></td>
+                                <td><%= pages %></td>
+                            </script>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script>
+        /* Models
+        --------------------------------------------------------------------- */
+        var BookModel = Backbone.Model.extend({});
+
+        var BooksCollection = Backbone.Collection.extend({
+            model: BookModel,
+            url: 'http://cloud.nanotaboada.com.ar/books',
+            parse: function(response) {
+                return response.books;
+            }
+        });
+
+        /* Views
+        --------------------------------------------------------------------- */
+        var BooksView = Backbone.View.extend({
+            el: $('#books'),
+            initialize: function() {
+                this.collection.bind('add', this.render, this);
+            },
+            render: function() {
+                _.each(this.collection.models, function(data) {
+                    this.$el.append(new BookView({model: data}).render().el);
+                }, this);
+                return this;
+            }
+        });
+
+        var BookView = Backbone.View.extend({
+            tagName: 'tr',
+            template: _.template($('#book').html()),
+            render: function() {
+                this.$el.html(this.template(this.model.toJSON()));
+                return this;
+            }
+        });
+
+        /* Controllers ("Routers")
+        --------------------------------------------------------------------- */
+
+        var BookRouter = Backbone.Router.extend({
+            routes: {
+                // Matches http://example.com/#anything-here
+                "*actions": "defaultRoute"
+            }
+        });
+
+        var router = new BookRouter;
+
+        router.on('route:defaultRoute', function(actions) {
+            var books = new BooksCollection();
+            books.fetch({
+                success: function() {
+                    new BooksView({collection: books}).render();
+                }
+            });
+        })
+
+        Backbone.history.start();
+    </script>
+</html>
