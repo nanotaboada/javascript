@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>EmberJS Sample: Ordering</title>
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <link rel="shortcut icon" href="http://emberjs.com/images/favicon.png" />
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+            a {
+                cursor: pointer;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.5.0/ember.debug.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember-data.js/1.0.0-beta.7/ember-data.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script>
+            /* Application
+            ----------------------------------------------------------------- */
+            window.Bookshelf = Ember.Application.create();
+            Bookshelf.ApplicationAdapter = DS.RESTAdapter.extend({
+                host: 'http://cloud.nanotaboada.com.ar'
+            });
+
+            /* Models
+            ----------------------------------------------------------------- */
+            Bookshelf.Book = DS.Model.extend({
+                isbn : DS.attr('string'),
+                title : DS.attr('string'),
+                author : DS.attr('string'),
+                published : DS.attr('date'),
+                publisher : DS.attr('string'),
+                pages : DS.attr('number'),
+                description : DS.attr('string'),
+                instock : DS.attr('boolean', {defaultValue: true})
+            });
+
+            /* Views
+            ----------------------------------------------------------------- */
+            Ember.Handlebars.registerBoundHelper('date', function(date) {
+                return moment(date).format('L');
+            });
+
+            Ember.Handlebars.helper('capitalise', function(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            });
+
+            /* Controllers/Routers
+            ----------------------------------------------------------------- */
+            Bookshelf.BooksController = Ember.ArrayController.extend({
+                sortedColumn: (function() {
+                    var properties = this.get('sortProperties');
+                    if(!properties) return undefined;
+                    return properties.get('firstObject');
+                }).property('sortProperties.[]'),
+                columns: (function() {
+                    return [
+                        Ember.Object.create({name:'isbn'}),
+                        Ember.Object.create({name:'title'}),
+                        Ember.Object.create({name:'author'}),
+                        Ember.Object.create({name:'published'}),
+                        Ember.Object.create({name:'publisher'}),
+                        Ember.Object.create({name:'pages'})
+                    ];
+                }).property(),
+                actions: {
+                    toggleSort: function(column) {
+                        if(this.get('sortedColumn') == column) {
+                            this.toggleProperty('sortAscending');
+                        } else {
+                            this.set('sortProperties', [column]);
+                            this.set('sortAscending', true);
+                        }
+                    }
+                }
+            });
+
+            Bookshelf.ColumnItemController = Ember.ObjectController.extend({
+                sortColumn: Ember.computed.alias('parentController.sortedColumn'),
+                sortAscending: Ember.computed.alias('parentController.sortAscending'),
+                sortDescending: Ember.computed.not('sortAscending'),
+                isSorted: (function() {
+                    return this.get('sortColumn') === this.get('name');
+                }).property('sortColumn', 'name'),
+                sortedAsc: Ember.computed.and('sortAscending', 'isSorted'),
+                sortedDesc: Ember.computed.and('sortDescending', 'isSorted')
+            });
+
+            Bookshelf.Router.map(function() {
+                // data-template-name
+                this.resource('books', { path: '/' });
+            });
+
+            Bookshelf.BooksRoute = Ember.Route.extend({
+                model: function () {
+                    return this.store.find('book');
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <script type="text/x-handlebars" data-template-name="books">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <div class="jumbotron">
+                        <img src="http://www.gravatar.com/avatar/0cf15665a9146ba852bf042b0652780a?s=112" alt="EmberJS Logo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <table class="table table-hover text-left">
+                            <thead>
+                                <tr>
+                                    {{#each columns itemController="columnItem"}}
+                                        <th>
+                                            <a {{action toggleSort name on='click'}}>
+                                                {{capitalise name}}
+                                            </a>
+                                        </th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each}}
+                                    <tr>
+                                        <td>{{isbn}}</td>
+                                        <td>{{title}}</td>
+                                        <td>{{author}}</td>
+                                        <td>{{date published}}</td>
+                                        <td>{{publisher}}</td>
+                                        <td>{{pages}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </script>
+    </body>
+</html>

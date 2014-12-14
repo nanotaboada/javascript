@@ -28,25 +28,7 @@
                 host: 'http://cloud.nanotaboada.com.ar'
             });
 
-            /* Routes
-            ----------------------------------------------------------------- */
-            Bookshelf.Router.map(function() {
-                this.resource('books', { path: '/' }); // data-template-name
-            });
-
-            Bookshelf.BooksRoute = Ember.Route.extend({
-                model: function () {
-                    return this.store.find('book');
-                }
-            });
-
-            /* View
-            ----------------------------------------------------------------- */
-            Ember.Handlebars.registerBoundHelper('formatDate', function(date) {
-              return moment(date).format('L');
-            });
-
-            /* Model
+            /* Models
             ----------------------------------------------------------------- */
             Bookshelf.Book = DS.Model.extend({
                 isbn : DS.attr('string'),
@@ -57,6 +39,24 @@
                 pages : DS.attr('number'),
                 description : DS.attr('string'),
                 instock : DS.attr('boolean', {defaultValue: true})
+            });
+
+            /* Views
+            ----------------------------------------------------------------- */
+            Ember.Handlebars.registerBoundHelper('formatDate', function(date) {
+                return moment(date).format('L');
+            });
+
+            /* Controllers/Routers
+            ----------------------------------------------------------------- */
+            Bookshelf.Router.map(function() {
+                this.resource('books', { path: '/' }); // data-template-name
+            });
+
+            Bookshelf.BooksRoute = Ember.Route.extend({
+                model: function () {
+                    return this.store.find('book');
+                }
             });
         </script>
     </head>
@@ -85,14 +85,14 @@
                             </thead>
                             <tbody>
                                 {{#each}}
-                                <tr>
-                                    <td>{{isbn}}</td>
-                                    <td>{{title}}</td>
-                                    <td>{{author}}</td>
-                                    <td>{{formatDate published}}</td>
-                                    <td>{{publisher}}</td>
-                                    <td>{{pages}}</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{isbn}}</td>
+                                        <td>{{title}}</td>
+                                        <td>{{author}}</td>
+                                        <td>{{formatDate published}}</td>
+                                        <td>{{publisher}}</td>
+                                        <td>{{pages}}</td>
+                                    </tr>
                                 {{/each}}
                             </tbody>
                         </table>
