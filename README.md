@@ -6,12 +6,11 @@ Manifesto
 
 About
 -----
-JavaScript sample projects showcasing a variety of technologies, frameworks and libraries. Created by [Nano Taboada](https://nanotaboada.myopenid.com/) under a [MIT License](http://opensource.org/licenses/mit-license.php).
+JavaScript sample projects showcasing a variety of technologies, frameworks and libraries.
 
 Credits
 -------
-All samples have been coded using Open Source development tools such as Adobe&reg; [Brackets](http://brackets.io/) and [Yeoman](http://yeoman.io/).
-
+All samples have been coded using Open Source development tools such as Adobe&reg; [Brackets](http://brackets.io/).
 
 Terms
 -----
