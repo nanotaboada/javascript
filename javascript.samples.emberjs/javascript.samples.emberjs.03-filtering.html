@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <title>EmberJS Sample: Filtering</title>
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <link rel="shortcut icon" href="http://emberjs.com/images/favicon.png" />
+        <style>
+            /* Arbitrary styles accommodating the display to fit a Single Page App format */
+            .jumbotron {
+                padding-top: 18px;
+                padding-bottom: 18px;
+            }
+            a {
+                cursor: pointer;
+            }
+        </style>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.5.0/ember.debug.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember-data.js/1.0.0-beta.7/ember-data.min.js"></script>
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
+        <script>
+            /* Application
+            ----------------------------------------------------------------- */
+            window.Bookshelf = Ember.Application.create();
+            Bookshelf.ApplicationAdapter = DS.RESTAdapter.extend({
+                host: 'http://cloud.nanotaboada.com.ar'
+            });
+
+            /* Models
+            ----------------------------------------------------------------- */
+            Bookshelf.Book = DS.Model.extend({
+                isbn : DS.attr('string'),
+                title : DS.attr('string'),
+                author : DS.attr('string'),
+                published : DS.attr('date'),
+                publisher : DS.attr('string'),
+                pages : DS.attr('number'),
+                description : DS.attr('string'),
+                instock : DS.attr('boolean', {defaultValue: true})
+            });
+
+            /* Views
+            ----------------------------------------------------------------- */
+            Ember.Handlebars.registerBoundHelper('date', function(date) {
+                return moment(date).format('L');
+            });
+
+            Ember.Handlebars.helper('capitalise', function(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            });
+
+            /* Controllers
+            ----------------------------------------------------------------- */
+            Bookshelf.BooksController = Ember.ArrayController.extend({
+                term: '',
+                filteredBookshelf: function(){
+                    var term = this.get('term');
+                    var regexp = new RegExp(term, 'gi');
+                    var books = this.get('arrangedContent');
+                    return books.filter(function(book) {
+                        return book.get('title').match(regexp);
+                    });
+                }.property('arrangedContent', 'term'),
+                actions: {
+                    sortBy: function(property) {
+                        this.set('sortProperties', [property]);
+                        this.set('sortAscending', !this.get('sortAscending'));
+                    }
+                }
+            });
+
+            /* Routers
+            ----------------------------------------------------------------- */
+            Bookshelf.Router.map(function() {
+                // data-template-name
+                this.resource('books', { path: '/' });
+            });
+
+            Bookshelf.BooksRoute = Ember.Route.extend({
+                model: function () {
+                    return this.store.find('book');
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <script type="text/x-handlebars" data-template-name="books">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <div class="jumbotron">
+                        <img src="http://www.gravatar.com/avatar/0cf15665a9146ba852bf042b0652780a?s=128" alt="EmberJS Logo" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group" id="search-bar">
+                            {{input type='text' classNames='form-control' placeholder='Title' value=term}}
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <table class="table table-hover text-left">
+                            <thead>
+                                <tr>
+                                    <th><a {{action 'sortBy' 'isbn'}} >ISBN</a></th>
+                                    <th><a {{action 'sortBy' 'title'}} >Title</a></th>
+                                    <th><a {{action 'sortBy' 'author'}} >Author</a></th>
+                                    <th><a {{action 'sortBy' 'published'}} >Published</a></th>
+                                    <th><a {{action 'sortBy' 'publisher'}} >Publisher</a></th>
+                                    <th><a {{action 'sortBy' 'pages'}} >Pages</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each filteredBookshelf}}
+                                    <tr>
+                                        <td>{{isbn}}</td>
+                                        <td>{{title}}</td>
+                                        <td>{{author}}</td>
+                                        <td>{{date published}}</td>
+                                        <td>{{publisher}}</td>
+                                        <td>{{pages}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </script>
+    </body>
+</html>
