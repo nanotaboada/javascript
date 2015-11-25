@@ -143,7 +143,7 @@
             viewModel.query.subscribe(viewModel.search);
             ko.applyBindings(viewModel);
             $(document).ready(function () {
-                var url = 'http://cloud.nanotaboada.com.ar/books';
+                var url = 'http://node-samples-paas.herokuapp.com/books';
                 $.getJSON(url, null, function(data, status, xhr) {
                     $.each(data.books, function(index, value) {
                         viewModel.bookshelf.push(value);

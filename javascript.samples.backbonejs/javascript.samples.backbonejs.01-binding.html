@@ -69,7 +69,7 @@
 
         var BooksCollection = Backbone.Collection.extend({
             model: BookModel,
-            url: 'http://cloud.nanotaboada.com.ar/books',
+            url: 'http://node-samples-paas.herokuapp.com/books',
             parse: function(response) {
                 return response.books;
             }

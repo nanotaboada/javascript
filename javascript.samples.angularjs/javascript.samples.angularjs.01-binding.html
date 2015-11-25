@@ -21,7 +21,7 @@
         <script>
             var app = angular.module('bookshelfApp', []);
             app.controller('bookshelfController', function ($scope, $http) {
-                var uri = 'http://cloud.nanotaboada.com.ar/books';
+                var uri = 'http://node-samples-paas.herokuapp.com/books';
                 $http.get(uri).success(function (catalog) {
                     $scope.columns = [ 'ISBN', 'Title', 'Author', 'Published', 'Publisher', 'Pages' ];
                     $scope.catalog = catalog;

@@ -147,7 +147,7 @@
             });
             function loadBook() {
                 var book;
-                $.getJSON('http://cloud.nanotaboada.com.ar/books/builder/1', function (data) {
+                $.getJSON('http://node-samples-paas.herokuapp.com/books/builder/1', function (data) {
                     book = data;
                 });
                 if (book) {
